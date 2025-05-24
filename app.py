@@ -1,27 +1,26 @@
 from flask import Flask, request, jsonify
-import joblib
+import pickle
+from sklearn.feature_extraction.text import CountVectorizer
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Load model and vectorizer once at startup
-model = joblib.load("spam_classifier_model.pkl")
-vectorizer = joblib.load("count_vectorizer.pkl")
+# Load the model and vectorizer
+model = pickle.load(open('model.pkl', 'rb'))
+cv = pickle.load(open('vectorizer.pkl', 'rb'))
+
+@app.route('/')
+def home():
+    return "Email Spam Detection API is Live"
 
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
-
-    if not data or 'text' not in data:
-        return jsonify({"error": "No email text provided"}), 400
-
-    email_text = data['text']
-    transformed_text = vectorizer.transform([email_text])
-    prediction = model.predict(transformed_text)
-
-    return jsonify({
-        "spam": bool(prediction[0])  # Convert numpy int to bool
-    })
+    if 'text' not in data:
+        return jsonify({'error': 'No text provided'}), 400
+    text = data['text']
+    vect_text = cv.transform([text]).toarray()
+    prediction = model.predict(vect_text)
+    return jsonify({'spam': bool(prediction[0])})
 
 if __name__ == '__main__':
     app.run(debug=True)
