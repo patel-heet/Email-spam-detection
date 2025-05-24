@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import os
 # Initialize Flask app
 app = Flask(__name__)
-
+CORS(app)
 # Load model and vectorizer once at startup
 model = joblib.load("spam_classifier_model.pkl")
 vectorizer = joblib.load("count_vectorizer.pkl")
