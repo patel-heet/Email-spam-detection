@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import joblib
-
+import os
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -22,10 +22,6 @@ def predict():
     return jsonify({
         "spam": bool(prediction[0])  # Convert numpy int to bool
     })
-
-if __name__ == '__main__':
-    app.run(debug=True)
-import os
 if name == "main":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
