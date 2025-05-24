@@ -5,8 +5,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 app = Flask(__name__)
 
 # Load the model and vectorizer
-model = pickle.load(open('model.pkl', 'rb'))
-cv = pickle.load(open('vectorizer.pkl', 'rb'))
+model = pickle.load(open('spam_classifier_model.pkl', 'rb'))
+cv = pickle.load(open('count_vectorizer.pkl', 'rb'))
 
 @app.route('/')
 def home():
