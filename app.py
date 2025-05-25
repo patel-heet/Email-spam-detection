@@ -9,6 +9,14 @@ CORS(app)
 model = joblib.load("spam_classifier_model.pkl")
 vectorizer = joblib.load("count_vectorizer.pkl")
 
+@app.route('/test', methods=['GET'])
+def test():
+    sample = "You are missing out on your prize. Click here to claim you money"
+    vect = cv.transform([sample])
+    pred = model.predict(vect)[0]
+    return jsonify({"spam": bool(pred)})
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
