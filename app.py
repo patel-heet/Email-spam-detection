@@ -6,12 +6,10 @@ app = Flask(__name__)
 CORS(app)
 
 model = joblib.load("spam_classifier_model.pkl")
-vectorizer = joblib.load("count_vectorizer.pkl")
 cv = joblib.load("count_vectorizer.pkl")  
 
 @app.route('/test', methods=['GET'])
 def test():
-    sample = "You are missing out on your prize. Click here to claim you money"
     sample = "You are missing out on your prize. Click here to claim your money"
     vect = cv.transform([sample])
     pred = model.predict(vect)[0]
@@ -25,13 +23,9 @@ def predict():
     message = data.get("message", "")
     print("📨 Received:", message)
 
-    if not data or 'text' not in data:
     if not message.strip():
         return jsonify({"error": "No email text provided"}), 400
 
-    email_text = data['text']
-    transformed_text = vectorizer.transform([email_text])
-    prediction = model.predict(transformed_text)
     try:
         vectorized = cv.transform([message])
         prediction = model.predict(vectorized)[0]
@@ -41,9 +35,6 @@ def predict():
         print("❌ Error in prediction:", str(e))
         return jsonify({"error": "Prediction failed", "details": str(e)}), 500
 
-    return jsonify({
-        "spam": bool(prediction[0]) 
-    })
 # Run the app
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
