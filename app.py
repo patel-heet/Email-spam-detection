@@ -1,17 +1,14 @@
-from flask_cors import CORSAdd commentMore actions
+from flask_cors import CORS
 import joblib
 import os
 
-# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Load model and vectorizer once at startup
 model = joblib.load("spam_classifier_model.pkl")
 vectorizer = joblib.load("count_vectorizer.pkl")
-cv = joblib.load("count_vectorizer.pkl")  # use same name 'cv' throughout
+cv = joblib.load("count_vectorizer.pkl")  
 
-# Test route to check if prediction works
 @app.route('/test', methods=['GET'])
 def test():
     sample = "You are missing out on your prize. Click here to claim you money"
@@ -45,7 +42,7 @@ def predict():
         return jsonify({"error": "Prediction failed", "details": str(e)}), 500
 
     return jsonify({
-        "spam": bool(prediction[0])  # Convert numpy int to bool
+        "spam": bool(prediction[0]) 
     })
 # Run the app
 if __name__ == '__main__':
