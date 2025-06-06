@@ -22,7 +22,6 @@ def test():
 def predict():
     data = request.get_json()
     message = data.get("message", "")
-    print("📨 Received:", message)
 
     if not message.strip():
         return jsonify({"error": "No email text provided"}), 400
